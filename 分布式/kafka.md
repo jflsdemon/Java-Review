@@ -7,7 +7,7 @@
 
 > cd /usr/local/Cellar/kafka/0.11.0.1
 
-> ./bin/zookeeper-server-start /usr/local/etc/kafka/zookeeper.properties &
+> ./bin/zookeeper-server-start -daemon /usr/local/etc/kafka/zookeeper.properties &
 
 - 最后出现绑定成功
 > [2017-03-15 14:11:38,769] INFO binding to port 0.0.0.0/0.0.0.0:2181 (org.apache.zookeeper.server.NIOServerCnxnFactory)
@@ -21,7 +21,8 @@
 
 5. 创建topic
 > ./bin/kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
-
+- --replication-factor 副本数
+- --partitions 分区数
 6. 查询topic
 > ./bin/kafka-topics --list --zookeeper localhost:2181
 
@@ -41,6 +42,18 @@
 10. 删除topic
 >  ./bin/kafka-topics --zookeeper localhost:2181 --delete --topic test
 ### 现在应该能够输入消息到生产者终端，看到他们出现在消费者终端。
+
+## 集群
+- 修改server.properties中
+    - broker.id
+    - listener中的host.name:port
+    - zookeeper.connect
+
+
+### 查看硬盘上的消息
+> sh /usr/local/Cellar/kafka/0.11.0.1/bin/kafka-run-class kafka.tools.DumpLogSegments --files /usr/local/var/lib/kafka-logs/first-0/00000000000000000000.log --print-data-log
+
+- 利用自带的jar包中的DumpLogSegments类，来运行二进制log文件
 
 作者：冰_茶
 链接：http://www.jianshu.com/p/cc540f29e779
